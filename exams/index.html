@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Archive</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Exam Archive</h1>
+    <p class="subtitle">Past exams shared on Discord, organized by course</p>
+  </header>
+
+  <main>
+    <div class="controls">
+      <input type="search" id="search" placeholder="Search filename or subject…" autocomplete="off">
+      <div class="selects">
+        <select id="subject-filter">
+          <option value="">All subjects</option>
+        </select>
+        <select id="year-filter">
+          <option value="">All years</option>
+        </select>
+        <select id="type-filter">
+          <option value="">All types</option>
+        </select>
+      </div>
+    </div>
+
+    <p id="result-count" class="result-count"></p>
+    <ul id="file-list" class="file-list" aria-live="polite"></ul>
+    <p id="empty-state" class="empty-state" hidden>No files match your filters.</p>
+    <p id="error-state" class="empty-state" hidden>Couldn't load index.json. If you're opening this file directly from disk, run a local server instead (see README).</p>
+  </main>
+
+  <footer>
+    <p>Generated from Discord exports — see the repo README for how to add new exams.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

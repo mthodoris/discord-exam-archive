@@ -1,0 +1,37 @@
+{
+  "_comment": "Edit this file to tune auto-categorization. Re-run sort_exams.py any time after editing.",
+
+  "subject_overrides": {
+    "_comment": "Map a Discord channel name to a nicer display subject name. Any channel not listed here uses its own name (title-cased). Example: \"math101\": \"Mathematics 101\"",
+    "general": "Uncategorized"
+  },
+
+  "channel_ignore_list_comment": "Channel names to skip entirely (announcements, off-topic, etc.)",
+  "channel_ignore_list": [
+    "announcements",
+    "off-topic",
+    "general-chat"
+  ],
+
+  "month_term_map": {
+    "_comment": "Maps a message's month (from text or, as fallback, its timestamp) to a term/semester label. Edit the labels to match your institution's calendar.",
+    "1": "Winter", "2": "Winter", "3": "Winter",
+    "4": "Spring", "5": "Spring", "6": "Spring",
+    "7": "Summer", "8": "Summer",
+    "9": "September", "10": "Fall", "11": "Fall", "12": "Fall"
+  },
+
+  "exam_type_keywords": {
+    "_comment": "First matching keyword (case-insensitive substring match against message text) wins. Add languages/aliases as needed.",
+    "final": ["final", "τελικ", "τελικη"],
+    "midterm": ["midterm", "mid-term", "ενδιαμεσ"],
+    "resit": ["resit", "re-sit", "makeup", "make-up", "επαναληπτικ"],
+    "quiz": ["quiz", "test", "προοδο"],
+    "lab": ["lab exam", "laboratory", "εργαστηρι"],
+    "oral": ["oral exam", "προφορικ"]
+  },
+
+  "default_exam_type": "exam",
+
+  "year_regex": "\\b(19|20)\\d{2}\\b"
+}
