@@ -143,6 +143,13 @@ class Entry:
     status: str = "ok"
 
 
+def entry_key(entry: dict) -> str:
+    """Stable identity for merging index.json across runs: Discord message
+    ids are globally unique snowflakes, so message_id + filename is enough
+    to dedupe/update the same attachment across repeated invocations."""
+    return f"{entry.get('message_id')}:{entry.get('original_filename')}"
+
+
 def file_kind_for(ext: str) -> str:
     ext = ext.lower()
     if ext in PDF_EXTS:
@@ -320,14 +327,29 @@ def main():
 
     args.output.mkdir(parents=True, exist_ok=True)
     index_path = args.output / "index.json"
+
+    # Merge into any existing index.json rather than overwriting it, so
+    # running this script against just one newly-exported channel (rather
+    # than the full export folder) doesn't drop previously indexed
+    # channels whose files are still sitting on disk.
+    merged: dict[str, dict] = {}
+    if index_path.exists():
+        with open(index_path, encoding="utf-8") as f:
+            existing = json.load(f)
+        for e in existing.get("files", []) + existing.get("missing", []):
+            merged[entry_key(e)] = e
+
+    for e in all_entries:
+        merged[entry_key(e.__dict__)] = e.__dict__
+
     index_data = {
         "generated_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
-        "files": [e.__dict__ for e in all_entries if e.status == "ok"],
-        "missing": [e.__dict__ for e in all_entries if e.status == "missing_file"],
+        "files": [e for e in merged.values() if e["status"] == "ok"],
+        "missing": [e for e in merged.values() if e["status"] == "missing_file"],
     }
     with open(index_path, "w", encoding="utf-8") as f:
         json.dump(index_data, f, indent=2, ensure_ascii=False)
-    log.info("Wrote %s", index_path)
+    log.info("Wrote %s (%d files, %d missing)", index_path, len(index_data["files"]), len(index_data["missing"]))
 
 
 if __name__ == "__main__":
